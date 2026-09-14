@@ -15,6 +15,8 @@
         }
     </style>
 
+    @php($estDirecteur = auth()->user()->role === 'directeur')
+
     @php($statut = match ($audience->statut) {
         'validee' => ['Validée', '#2D5A27', '#EAF0E6'],
         'programmee' => ['Programmée', '#1F4E79', '#E7EEF5'],
@@ -29,9 +31,9 @@
     @endif
 
     {{-- En-tête --}}
-    <a href="{{ route('agenda') }}"
+    <a href="{{ $estDirecteur ? route('directeur.audiences') : route('agenda') }}"
        style="display:inline-block;font-size:13px;font-weight:700;color:#2D5A27;text-decoration:none;margin-bottom:14px">
-        ← Retour à l'agenda
+        ← Retour {{ $estDirecteur ? 'à mes audiences' : "à l'agenda" }}
     </a>
 
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:22px">
@@ -48,7 +50,7 @@
             </div>
         </div>
 
-        @unless ($audience->statut === 'annulee')
+        @unless ($audience->statut === 'annulee' || $estDirecteur)
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
                 <a href="{{ route('audience.modifier', $audience) }}"
                    style="padding:9px 18px;border-radius:999px;border:1px solid rgba(42,26,20,.20);background:#FFFFFF;color:#2A1A14;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">

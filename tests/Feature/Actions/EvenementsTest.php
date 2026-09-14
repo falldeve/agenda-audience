@@ -4,6 +4,12 @@ use App\Actions\EnregistrerDemande;
 use App\Actions\ProgrammerAudience;
 use App\Models\Audience;
 use App\Models\User;
+use Illuminate\Support\Carbon;
+
+beforeEach(function () {
+    // Horloge figée : les créneaux de septembre 2026 doivent rester futurs
+    Carbon::setTestNow('2026-09-01 08:00:00');
+});
 
 test('enregistrer une demande crée un événement de saisie lié à son auteur', function () {
     $secretaire = User::factory()->create(['name' => 'Fatou Ndiaye']);

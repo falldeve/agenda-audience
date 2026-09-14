@@ -12,6 +12,12 @@ class ProgrammerAudience
     {
         $creneau = Carbon::parse($creneau);
 
+        if ($creneau->isPast()) {
+            throw ValidationException::withMessages([
+                'creneau' => 'Une audience ne peut pas être programmée dans le passé.',
+            ]);
+        }
+
         if ($creneau->isWeekend()) {
             throw ValidationException::withMessages([
                 'creneau' => 'Les audiences se tiennent du lundi au vendredi.',

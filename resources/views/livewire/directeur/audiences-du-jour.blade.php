@@ -26,14 +26,12 @@
                 <div style="font-family:'Playfair Display',serif;font-size:26px;color:#2A1A14">{{ $a->creneau->format('H\hi') }}</div>
             </div>
 
-            <div style="flex:1;min-width:200px">
+            <a href="{{ route('audience.fiche', $a) }}" style="flex:1;min-width:200px;text-decoration:none;color:inherit">
                 <div style="font-size:16px;font-weight:700;color:#2A1A14">{{ $a->demandeur_nom }}</div>
                 <div style="font-size:13px;color:#5A463D">{{ $a->demandeur_organisation }}</div>
                 <div style="font-size:13px;color:#5A463D;margin-top:2px">{{ $a->objet }}</div>
-                @if ($a->lettre_scannee)
-                    <a href="{{ asset('storage/'.$a->lettre_scannee) }}" target="_blank" style="font-size:12px;color:#2D5A27;font-weight:700;text-decoration:underline">Lettre scannée</a>
-                @endif
-            </div>
+                <div style="font-size:12px;color:#2D5A27;font-weight:700;margin-top:4px">Voir la fiche →</div>
+            </a>
 
             <div>
                 @if ($a->statut === 'validee')

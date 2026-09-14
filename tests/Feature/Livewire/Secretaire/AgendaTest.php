@@ -3,7 +3,13 @@
 use App\Livewire\Secretaire\Agenda;
 use App\Models\Audience;
 use App\Models\User;
+use Illuminate\Support\Carbon;
 use Livewire\Livewire;
+
+beforeEach(function () {
+    // Horloge figée : les créneaux de septembre 2026 doivent rester futurs
+    Carbon::setTestNow('2026-09-01 08:00:00');
+});
 
 function demandeAPlacer(User $secretaire, string $nom = 'Ousmane Fall'): Audience
 {

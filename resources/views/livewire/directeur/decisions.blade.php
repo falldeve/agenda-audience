@@ -15,14 +15,12 @@
                 <div style="font-size:12px;color:#8A766C">{{ $a->creneau->translatedFormat('D d M') }}</div>
             </div>
 
-            <div style="flex:1;min-width:200px">
+            <a href="{{ route('audience.fiche', $a) }}" style="flex:1;min-width:200px;text-decoration:none;color:inherit">
                 <div style="font-size:16px;font-weight:700;color:#2A1A14">{{ $a->demandeur_nom }}</div>
                 <div style="font-size:13px;color:#5A463D">{{ $a->demandeur_organisation }}</div>
                 <div style="font-size:13px;color:#5A463D;margin-top:2px">{{ $a->objet }}</div>
-                @if ($a->lettre_scannee)
-                    <a href="{{ asset('storage/'.$a->lettre_scannee) }}" target="_blank" style="font-size:12px;color:#2D5A27;font-weight:700;text-decoration:underline">Lettre scannée</a>
-                @endif
-            </div>
+                <div style="font-size:12px;color:#2D5A27;font-weight:700;margin-top:4px">Voir la fiche →</div>
+            </a>
 
             <div style="display:flex;gap:8px">
                 <button wire:click="ouvrirRefus({{ $a->id }})" style="padding:9px 16px;border-radius:999px;border:1px solid rgba(42,26,20,.20);background:#FFF;color:#2A1A14;font-size:13px;font-weight:700;cursor:pointer">Refuser</button>

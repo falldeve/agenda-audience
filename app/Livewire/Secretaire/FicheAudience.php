@@ -4,10 +4,8 @@ namespace App\Livewire\Secretaire;
 
 use App\Actions\AnnulerAudience;
 use App\Models\Audience;
-use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-#[Layout('layouts.agenda')]
 class FicheAudience extends Component
 {
     public Audience $audience;
@@ -49,6 +47,15 @@ class FicheAudience extends Component
         // Rechargé ici plutôt que dans mount() : les relations ne survivent pas à l'hydratation
         $this->audience->loadMissing(['auteur', 'evenements.auteur']);
 
-        return view('livewire.secretaire.fiche-audience');
+        $layout = request()->user()?->role === 'directeur'
+            ? 'layouts.directeur'
+            : 'layouts.agenda';
+
+        // layout() est un macro que Livewire greffe sur Illuminate\View\View à l'exécution :
+        // l'analyse statique ne peut pas le connaître, d'où la variable volontairement non typée.
+        /** @var mixed $vue */
+        $vue = view('livewire.secretaire.fiche-audience');
+
+        return $vue->layout($layout);
     }
 }
