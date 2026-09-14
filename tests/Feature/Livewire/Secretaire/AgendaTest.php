@@ -36,7 +36,8 @@ test('programme une audience depuis la modale et la referme', function () {
 });
 
 test('garde la modale ouverte avec le message du conflit quand le créneau est occupé', function () {
-    $secretaire = User::factory()->create();
+    // $secretaire = User::factory()->create();
+    $secretaire = User::factory()->create(['role' => 'secretaire']);
 
     Audience::create([
         'demandeur_nom' => 'Amadou Diop',

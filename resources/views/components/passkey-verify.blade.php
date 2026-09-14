@@ -35,7 +35,7 @@
                         submit: '{{ route($submitRoute) }}',
                     },
                 });
-                Livewire.navigate(response.redirect || '/dashboard');
+                Livewire.navigate(response.redirect || '/agenda');
             } catch (e) {
                 if (e.constructor?.name !== 'UserCancelledError') {
                     this.error = e.message;

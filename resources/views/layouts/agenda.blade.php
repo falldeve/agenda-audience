@@ -37,6 +37,14 @@
                 <a href="#" style="{{ $lienInactif }}">Fiche audience</a>
 
                 <div style="margin-top:auto;padding:14px 12px 0;border-top:1px solid rgba(42,26,20,.10);font-size:12px;color:#8A766C;line-height:1.6">Connectée en tant que<br><span style="color:#2A1A14;font-weight:700">{{ auth()->user()->name }}</span><br>Secrétariat particulier</div>
+
+                <form method="POST" action="{{ route('logout') }}" style="padding:10px 12px 0">
+                    @csrf
+                    <button type="submit" data-test="logout-button"
+                            style="width:100%;padding:9px 14px;border-radius:999px;border:1px solid rgba(42,26,20,.20);background:#FFFFFF;color:#5A463D;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer">
+                        Se déconnecter
+                    </button>
+                </form>
             </nav>
 
             <main style="flex:1;min-width:0;padding:28px 32px 48px">

@@ -5,10 +5,12 @@ namespace App\Providers;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -18,7 +20,14 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Outil interne : après déconnexion on revient au formulaire, pas sur la page d'accueil
+        $this->app->singleton(LogoutResponse::class, fn () => new class implements LogoutResponse
+        {
+            public function toResponse($request): RedirectResponse
+            {
+                return redirect()->route('login');
+            }
+        });
     }
 
     /**
@@ -29,6 +38,17 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+
+        $this->app->instance(\Laravel\Fortify\Contracts\LoginResponse::class, new class implements \Laravel\Fortify\Contracts\LoginResponse {
+    public function toResponse($request)
+    {
+        return redirect()->intended(
+            $request->user()->role === 'directeur'
+                ? route('directeur.audiences')
+                : route('agenda')
+        );
+    }
+});
     }
 
     /**
@@ -76,4 +96,6 @@ class FortifyServiceProvider extends ServiceProvider
             );
         });
     }
+
+    
 }

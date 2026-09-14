@@ -4,7 +4,7 @@ use App\Models\Audience;
 use App\Models\User;
 
 test('la fiche affiche le dossier, le demandeur et son historique', function () {
-    $secretaire = User::factory()->create(['name' => 'Fatou Ndiaye']);
+    $secretaire = User::factory()->create(['name' => 'Fatou Ndiaye', 'role' => 'secretaire']);
 
     $audience = Audience::create([
         'demandeur_nom' => 'Ousmane Fall',
@@ -43,7 +43,7 @@ test('la fiche affiche le dossier, le demandeur et son historique', function () 
 });
 
 test('la fiche signale une audience sans créneau, sans motif et sans lettre', function () {
-    $secretaire = User::factory()->create();
+    $secretaire = User::factory()->create(['role' => 'secretaire']);
 
     $audience = Audience::create([
         'demandeur_nom' => 'Ibrahima Sow',
