@@ -32,6 +32,9 @@
         <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
             <span style="display:flex;align-items:center;gap:7px;font-size:13px;color:#5A463D"><span style="width:11px;height:11px;border-radius:3px;background:#2D5A27;display:inline-block"></span>Validée</span>
             <span style="display:flex;align-items:center;gap:7px;font-size:13px;color:#5A463D"><span style="width:11px;height:11px;border-radius:3px;background:#1F4E79;display:inline-block"></span>En attente du directeur</span>
+            <span style="display:flex;align-items:center;gap:7px;font-size:13px;color:#5A463D"><span style="width:11px;height:11px;border-radius:3px;background:#8A766C;display:inline-block"></span>Échue</span>
+            <span style="display:flex;align-items:center;gap:7px;font-size:13px;color:#5A463D"><span style="width:11px;height:11px;border-radius:3px;background:#2D5A27;display:inline-block"></span>Tenue</span>
+            <span style="display:flex;align-items:center;gap:7px;font-size:13px;color:#5A463D"><span style="width:11px;height:11px;border-radius:3px;background:#B4620A;display:inline-block"></span>Non honorée</span>
         </div>
     </div>
 
@@ -59,16 +62,23 @@
 
                         <div style="padding:6px;border-left:1px solid rgba(42,26,20,.08);display:flex;flex-direction:column;gap:5px">
                             @foreach ($parCase[$cle] ?? collect() as $audience)
-                                @php($couleurs = match ($audience->statut) {
-                                    'validee' => ['#2D5A27', '#EAF0E6'],
-                                    'reportee' => ['#B4620A', '#F6E9DC'],
-                                    default => ['#1F4E79', '#E7EEF5'],
+                                @php([$libelleStatut, $traitStatut, $fondStatut] = match ($audience->statut) {
+                                    'validee' => ['Validée', '#2D5A27', '#EAF0E6'],
+                                    'echue' => ['Échue', '#8A766C', '#EDE9E3'],
+                                    'tenue' => ['Tenue', '#2D5A27', '#EAF0E6'],
+                                    'non_honoree' => ['Non honorée', '#B4620A', '#F6E9DC'],
+                                    'reportee' => ['Reportée', '#B4620A', '#F6E9DC'],
+                                    default => ['En attente', '#1F4E79', '#E7EEF5'],
                                 })
 
                                 <a href="{{ route('audience.fiche', $audience) }}"
-                                   style="display:block;text-align:left;border:none;border-radius:7px;padding:7px 9px;cursor:pointer;text-decoration:none;border-left:3px solid {{ $couleurs[0] }};background:{{ $couleurs[1] }};color:#2A1A14">
+                                   style="display:block;text-align:left;border:none;border-radius:7px;padding:7px 9px;cursor:pointer;text-decoration:none;border-left:3px solid {{ $traitStatut }};background:{{ $fondStatut }};color:#2A1A14">
                                     <span style="font-weight:700;font-size:12px;display:block">{{ $audience->creneau->format('H:i') }} · {{ $audience->demandeur_nom }}</span>
                                     <span style="font-size:11.5px;display:block;line-height:1.35;opacity:.92">{{ $audience->objet }}</span>
+
+                                    @if (in_array($audience->statut, ['echue', 'tenue', 'non_honoree'], true))
+                                        <span style="display:inline-block;margin-top:4px;padding:1px 7px;border-radius:999px;background:#FFFFFF;color:{{ $traitStatut }};font-size:10px;font-weight:700;letter-spacing:.04em">{{ $libelleStatut }}</span>
+                                    @endif
                                 </a>
                             @endforeach
                         </div>

@@ -23,7 +23,7 @@ class AudiencesDuJour extends Component
 
     public function render()
     {
-        $requete = Audience::whereIn('statut', ['programmee', 'validee'])
+        $requete = Audience::whereIn('statut', ['programmee', 'validee', 'echue', 'tenue', 'non_honoree'])
             ->whereNotNull('creneau')
             ->orderBy('creneau');
 

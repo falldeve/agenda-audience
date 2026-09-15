@@ -12,6 +12,7 @@ use Livewire\Component;
 class Decisions extends Component
 {
     public ?int $audienceARefuser = null;
+
     public string $motifRefus = '';
 
     public function valider(int $id, ValiderAudience $action)

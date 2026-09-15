@@ -26,7 +26,7 @@ return new class extends Migration
             // L'agenda
             $table->dateTime('creneau')->nullable();       // null = pas encore programmée
             // Le workflow
-            $table->string('statut')->default('en_attente'); // en_attente|programmee|validee|refusee|reportee|tenue
+            $table->string('statut')->default('en_attente'); // valeurs possibles documentées sur le modèle Audience
             $table->text('motif_refus')->nullable();
             $table->foreignId('saisie_par')->constrained('users');
             $table->timestamps();

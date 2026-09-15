@@ -76,7 +76,7 @@ class Agenda extends Component
         $debutSemaine = now()->startOfWeek()->addWeeks($this->decalageSemaine);
 
         $parCase = Audience::whereNotNull('creneau')
-            ->whereIn('statut', ['programmee', 'validee'])
+            ->whereIn('statut', ['programmee', 'validee', 'echue', 'tenue', 'non_honoree'])
             ->get()
             ->groupBy(fn (Audience $audience) => $audience->creneau->format('Y-m-d-G'));
 

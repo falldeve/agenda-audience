@@ -7,6 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Valeurs possibles de la colonne `statut` (chaîne libre en base, pas d'enum) :
+ *
+ * - en_attente   demande reçue, pas encore de créneau
+ * - programmee   créneau posé par la secrétaire, en attente de décision du directeur
+ * - validee      créneau accepté par le directeur
+ * - refusee      demande refusée par le directeur
+ * - reportee     créneau retiré, à replacer
+ * - annulee      demande annulée, conservée pour la traçabilité
+ * - echue        créneau validé désormais passé — seul fait établi automatiquement
+ * - tenue        l'audience a bien eu lieu, confirmé à la main depuis la fiche
+ * - non_honoree  le demandeur ne s'est pas présenté, constaté à la main depuis la fiche
+ */
 class Audience extends Model
 {
     protected $fillable = [

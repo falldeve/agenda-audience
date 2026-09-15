@@ -18,7 +18,15 @@
     </div>
 
     @forelse ($audiences as $a)
-        <div style="display:flex;align-items:center;gap:20px;background:#FFF;border:1px solid rgba(42,26,20,.12);border-left:3px solid {{ $a->statut === 'validee' ? '#2D5A27' : '#1F4E79' }};border-radius:10px;padding:18px 22px;margin-bottom:14px;flex-wrap:wrap">
+        @php([$libelleStatut, $traitStatut, $fondStatut] = match ($a->statut) {
+            'validee' => ['Validée', '#2D5A27', '#EAF0E6'],
+            'echue' => ['Échue', '#8A766C', '#EDE9E3'],
+            'tenue' => ['Tenue', '#2D5A27', '#EAF0E6'],
+            'non_honoree' => ['Non honorée', '#B4620A', '#F6E9DC'],
+            default => ['En attente', '#1F4E79', '#E7EEF5'],
+        })
+
+        <div style="display:flex;align-items:center;gap:20px;background:#FFF;border:1px solid rgba(42,26,20,.12);border-left:3px solid {{ $traitStatut }};border-radius:10px;padding:18px 22px;margin-bottom:14px;flex-wrap:wrap">
             <div style="min-width:92px">
                 @if ($vue === 'semaine')
                     <div style="font-size:12px;color:#8A766C;text-transform:capitalize">{{ $a->creneau->translatedFormat('l j') }}</div>
@@ -34,11 +42,7 @@
             </a>
 
             <div>
-                @if ($a->statut === 'validee')
-                    <span style="font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;background:#EAF0E6;color:#2D5A27">Validée</span>
-                @else
-                    <span style="font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;background:#E7EEF5;color:#1F4E79">En attente</span>
-                @endif
+                <span style="font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;background:{{ $fondStatut }};color:{{ $traitStatut }}">{{ $libelleStatut }}</span>
             </div>
         </div>
     @empty

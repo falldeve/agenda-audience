@@ -20,6 +20,9 @@
     @php($statut = match ($audience->statut) {
         'validee' => ['Validée', '#2D5A27', '#EAF0E6'],
         'programmee' => ['Programmée', '#1F4E79', '#E7EEF5'],
+        'echue' => ['Échue', '#8A766C', '#EDE9E3'],
+        'tenue' => ['Tenue', '#2D5A27', '#EAF0E6'],
+        'non_honoree' => ['Non honorée', '#B4620A', '#F6E9DC'],
         'refusee' => ['Refusée', '#A32A2A', '#F6E3E3'],
         'reportee' => ['Reportée', '#B4620A', '#F6E9DC'],
         'annulee' => ['Annulée', '#5A463D', '#EDE9E3'],
@@ -50,18 +53,34 @@
             </div>
         </div>
 
-        @unless ($audience->statut === 'annulee' || $estDirecteur)
-            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-                <a href="{{ route('audience.modifier', $audience) }}"
-                   style="padding:9px 18px;border-radius:999px;border:1px solid rgba(42,26,20,.20);background:#FFFFFF;color:#2A1A14;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">
-                    Modifier
-                </a>
+        @unless ($estDirecteur)
+            @if ($audience->statut === 'echue')
+                {{-- Le créneau est passé : reste à dire ce qui s'y est produit. --}}
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                    <button type="button" wire:click="confirmerTenue"
+                            style="padding:9px 18px;border-radius:999px;border:none;background:#2D5A27;color:#FFFFFF;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">
+                        Audience tenue
+                    </button>
 
-                <button type="button" wire:click="ouvrirAnnulation"
-                        style="padding:9px 18px;border-radius:999px;border:1px solid rgba(163,44,44,.45);background:#FFFFFF;color:#A32A2A;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">
-                    Annuler la demande
-                </button>
-            </div>
+                    <button type="button" wire:click="ouvrirNonHonoree"
+                            style="padding:9px 18px;border-radius:999px;border:1px solid rgba(42,26,20,.20);background:#FFFFFF;color:#5A463D;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">
+                        Non honorée
+                    </button>
+                </div>
+            {{-- Statuts terminaux : plus rien à modifier ni à annuler. --}}
+            @elseif (! in_array($audience->statut, ['annulee', 'tenue', 'non_honoree'], true))
+                <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                    <a href="{{ route('audience.modifier', $audience) }}"
+                       style="padding:9px 18px;border-radius:999px;border:1px solid rgba(42,26,20,.20);background:#FFFFFF;color:#2A1A14;font-size:13px;font-weight:700;text-decoration:none;white-space:nowrap">
+                        Modifier
+                    </a>
+
+                    <button type="button" wire:click="ouvrirAnnulation"
+                            style="padding:9px 18px;border-radius:999px;border:1px solid rgba(163,44,44,.45);background:#FFFFFF;color:#A32A2A;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">
+                        Annuler la demande
+                    </button>
+                </div>
+            @endif
         @endunless
     </div>
 
@@ -200,6 +219,38 @@
                     <button type="button" wire:click="confirmerAnnulation"
                             style="padding:9px 18px;border-radius:999px;border:none;background:#A32A2A;color:#FFFFFF;font-size:13px;font-weight:700;cursor:pointer">
                         Confirmer l'annulation
+                    </button>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- Constat de non-présentation --}}
+    @if ($confirmationNonHonoree)
+        <div style="position:fixed;inset:0;background:rgba(42,26,20,.45);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px">
+            <div style="background:#FFFFFF;border-radius:12px;padding:24px 26px;max-width:440px;width:90%">
+                <h2 style="font-family:'Playfair Display',serif;font-size:21px;font-weight:700;margin:0 0 6px;color:#2A1A14">Audience non honorée</h2>
+
+                <div style="font-size:13px;color:#5A463D;margin-bottom:18px">
+                    {{ $audience->demandeur_nom }} · {{ $audience->objet }}<br>
+                    Le dossier restera consultable, avec ce constat dans son historique.
+                </div>
+
+                <label style="display:flex;flex-direction:column;gap:6px">
+                    <span style="font-size:13px;font-weight:700;color:#2A1A14">Motif <span style="font-weight:400;color:#8A766C">(facultatif)</span></span>
+                    <textarea wire:model="motifNonHonoree" rows="3"
+                              style="width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid rgba(42,26,20,.22);border-radius:7px;font-size:13px;font-family:inherit;color:#2A1A14;background:#FFFFFF;resize:vertical"></textarea>
+                </label>
+
+                <div style="display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:22px;flex-wrap:wrap">
+                    <button type="button" wire:click="fermerNonHonoree"
+                            style="padding:9px 18px;border-radius:999px;border:1px solid rgba(42,26,20,.22);background:#FFFFFF;color:#5A463D;font-size:13px;font-weight:700;cursor:pointer">
+                        Retour
+                    </button>
+
+                    <button type="button" wire:click="confirmerNonHonoree"
+                            style="padding:9px 18px;border-radius:999px;border:none;background:#B4620A;color:#FFFFFF;font-size:13px;font-weight:700;cursor:pointer">
+                        Confirmer le constat
                     </button>
                 </div>
             </div>
